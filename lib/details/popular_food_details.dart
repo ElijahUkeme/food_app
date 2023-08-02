@@ -12,14 +12,16 @@ import 'package:food_app/widgets/expandable_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../route/route_helper.dart';
 import '../widgets/big_texts.dart';
 import '../widgets/icon_and_text.dart';
 import '../widgets/small_texts.dart';
 
 class PopularFoodDetails extends StatelessWidget {
   int pageId;
+  final String page;
 
-  PopularFoodDetails({Key? key, required this.pageId}) : super(key: key);
+  PopularFoodDetails({Key? key, required this.pageId, required this.page}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,33 +61,40 @@ class PopularFoodDetails extends StatelessWidget {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Get.to(() => MainPage());
+                        if(page=="cartpage"){
+                          Get.toNamed(RouteHelper.getCartPage());
+                        }else{
+                          Get.toNamed(RouteHelper.getInitial());
+                        }
                       },
                       child: AppIcon(icon: Icons.arrow_back_ios)),
                   GetBuilder<PopularProductController>(builder: ((controller) {
-                    return Stack(
-                      children: [
-                        AppIcon(icon: Icons.add_shopping_cart_outlined),
-                        Get.find<PopularProductController>().totalItems>=1?
-                        Positioned(
-                          right:0,top:0,
-                          child: GestureDetector(
-                            onTap:(){
-                              Get.to(()=>CartPage());
-                    },
-                            child: AppIcon(icon: Icons.circle, size: 20, iconColor: Colors.transparent,
-                              backgroundColor: Colors.greenAccent,),
-                          ),
-                        ):
-                            Container(),
-                        Get.find<PopularProductController>().totalItems>=1?
-                        Positioned(
-                          right:3,top:3,
-                          child: BigTexts(text: Get.find<PopularProductController>().totalItems.toString(),
-                          size: 12,color: Colors.white,)
-                        ):
-                        Container()
-                      ],
+                    return GestureDetector(
+                      onTap: (){
+                        if(controller.totalItems>=1)
+                          Get.toNamed(RouteHelper.getCartPage());
+                      },
+                      child: Stack(
+                        children: [
+                          AppIcon(icon: Icons.add_shopping_cart_outlined),
+                          controller.totalItems>=1?
+                          Positioned(
+                            right:0,top:0,
+
+                              child: AppIcon(icon: Icons.circle, size: 20, iconColor: Colors.transparent,
+                                backgroundColor: Colors.greenAccent,),
+
+                          ):
+                              Container(),
+                          Get.find<PopularProductController>().totalItems>=1?
+                          Positioned(
+                            right:3,top:3,
+                            child: BigTexts(text: Get.find<PopularProductController>().totalItems.toString(),
+                            size: 12,color: Colors.white,)
+                          ):
+                          Container()
+                        ],
+                      ),
                     );
                   }),)
                 ],
@@ -192,7 +201,7 @@ class PopularFoodDetails extends StatelessWidget {
                         right: Dimension.width20),
 
                       child: BigTexts(
-                        text: "\# ${product.price!} | Add to cart",
+                        text: "# ${product.price!} | Add to cart",
                         color: Colors.white,
                       ),
 

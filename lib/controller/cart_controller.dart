@@ -11,6 +11,7 @@ class CartController extends GetxController{
 
  Map<int, CartModel> _items = {};
  Map <int,CartModel> get items =>_items;
+ List<CartModel> storageItems = [];
 
  void addItem(ProductsModel productsModel, int quantity){
    var totalQuantity = 0;
@@ -25,6 +26,7 @@ class CartController extends GetxController{
            quantity: value.quantity!+quantity,
            isExist: true,
          time: DateTime.now().toString(),
+         product: productsModel,
        );
      });
      if(totalQuantity<=0){
@@ -44,6 +46,7 @@ class CartController extends GetxController{
           quantity: quantity,
           isExist: true,
           time: DateTime.now().toString(),
+          product: productsModel,
         );
       });
     }else{
@@ -53,6 +56,8 @@ class CartController extends GetxController{
     }
 
    }
+   cartRepository.addToCartList(getItems);
+   update();
 
  }
  bool existInCart(ProductsModel productsModel){
@@ -88,4 +93,49 @@ class CartController extends GetxController{
      return e.value;
    }).toList();
  }
+ int get totalAmount{
+   var total = 0;
+   _items.forEach((key, value) {
+     total += value.price!*value.quantity!;
+   });
+   return total;
+ }
+
+ List<CartModel> getCartData(){
+   setCart = cartRepository.getCartList();
+   return storageItems;
+ }
+  set setCart(List<CartModel> items){
+   storageItems = items;
+   print("length of cart items is "+storageItems.length.toString());
+   for(int i=0;i<storageItems.length;i++){
+     _items.putIfAbsent(storageItems[i].product!.id!, () => storageItems[i]);
+   }
+
+  }
+  void addToHistory(){
+   cartRepository.addToCartHistoryList();
+   clear();
+  }
+  void clear(){
+   _items = {};
+   update();
+  }
+
+  List<CartModel> getCartHistoryList(){
+   return cartRepository.getCartHistoryList();
+  }
+  set setItems(Map<int, CartModel> setItems){
+   _items = {};
+   _items = setItems;
+  }
+  void addToCartList(){
+   cartRepository.addToCartList(getItems);
+   update();
+  }
+  void clearCartList(){
+   cartRepository.clearTheCartLIst();
+   clear();
+   update();
+  }
 }
