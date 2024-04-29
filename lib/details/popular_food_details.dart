@@ -21,13 +21,15 @@ class PopularFoodDetails extends StatelessWidget {
   int pageId;
   final String page;
 
-  PopularFoodDetails({Key? key, required this.pageId, required this.page}) : super(key: key);
+  PopularFoodDetails({Key? key, required this.pageId, required this.page})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var product =
         Get.find<PopularProductController>().popularProductList[pageId];
-    Get.find<PopularProductController>().initProduct(product,Get.find<CartController>());
+    Get.find<PopularProductController>()
+        .initProduct(product, Get.find<CartController>());
     print("Product id is " + pageId.toString());
     print("product name is " + product.name.toString());
     print("current height is " + MediaQuery.of(context).size.height.toString());
@@ -46,9 +48,7 @@ class PopularFoodDetails extends StatelessWidget {
                 height: Dimension.popularFoodImageSize,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            product.img!))),
+                        fit: BoxFit.cover, image: NetworkImage(product.img!))),
               ),
             ),
             //icon widgets
@@ -61,42 +61,52 @@ class PopularFoodDetails extends StatelessWidget {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        if(page=="cartpage"){
+                        if (page == "cartpage") {
                           Get.toNamed(RouteHelper.getCartPage());
-                        }else{
+                        } else {
                           Get.toNamed(RouteHelper.getInitial());
                         }
                       },
                       child: AppIcon(icon: Icons.arrow_back_ios)),
-                  GetBuilder<PopularProductController>(builder: ((controller) {
-                    return GestureDetector(
-                      onTap: (){
-                        if(controller.totalItems>=1)
-                          Get.toNamed(RouteHelper.getCartPage());
-                      },
-                      child: Stack(
-                        children: [
-                          AppIcon(icon: Icons.add_shopping_cart_outlined),
-                          controller.totalItems>=1?
-                          Positioned(
-                            right:0,top:0,
-
-                              child: AppIcon(icon: Icons.circle, size: 20, iconColor: Colors.transparent,
-                                backgroundColor: Colors.greenAccent,),
-
-                          ):
-                              Container(),
-                          Get.find<PopularProductController>().totalItems>=1?
-                          Positioned(
-                            right:3,top:3,
-                            child: BigTexts(text: Get.find<PopularProductController>().totalItems.toString(),
-                            size: 12,color: Colors.white,)
-                          ):
-                          Container()
-                        ],
-                      ),
-                    );
-                  }),)
+                  GetBuilder<PopularProductController>(
+                    builder: ((controller) {
+                      return GestureDetector(
+                        onTap: () {
+                          if (controller.totalItems >= 1)
+                            Get.toNamed(RouteHelper.getCartPage());
+                        },
+                        child: Stack(
+                          children: [
+                            AppIcon(icon: Icons.add_shopping_cart_outlined),
+                            controller.totalItems >= 1
+                                ? Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: AppIcon(
+                                      icon: Icons.circle,
+                                      size: 20,
+                                      iconColor: Colors.transparent,
+                                      backgroundColor: Colors.greenAccent,
+                                    ),
+                                  )
+                                : Container(),
+                            Get.find<PopularProductController>().totalItems >= 1
+                                ? Positioned(
+                                    right: 3,
+                                    top: 3,
+                                    child: BigTexts(
+                                      text: Get.find<PopularProductController>()
+                                          .totalItems
+                                          .toString(),
+                                      size: 12,
+                                      color: Colors.white,
+                                    ))
+                                : Container()
+                          ],
+                        ),
+                      );
+                    }),
+                  )
                 ],
               ),
             ),
@@ -156,8 +166,7 @@ class PopularFoodDetails extends StatelessWidget {
                   padding: EdgeInsets.only(
                       top: Dimension.height20,
                       bottom: Dimension.height20,
-                      left: Dimension.width20,
-                      right: Dimension.width20),
+                      left: Dimension.width20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimension.radius20),
                       color: Colors.white),
@@ -190,21 +199,19 @@ class PopularFoodDetails extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     popularProduct.addItem(product);
-              },
+                  },
                   child: Container(
                     padding: EdgeInsets.only(
                         top: Dimension.height20,
                         bottom: Dimension.height20,
                         left: Dimension.width20,
                         right: Dimension.width20),
-
-                      child: BigTexts(
-                        text: "# ${product.price!} | Add to cart",
-                        color: Colors.white,
-                      ),
-
+                    child: BigTexts(
+                      text: "# ${product.price!} | Add to cart",
+                      color: Colors.white,
+                    ),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(Dimension.radius20),
                         color: Colors.greenAccent),
